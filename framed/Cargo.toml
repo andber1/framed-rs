@@ -31,7 +31,7 @@ default = ["use_std"]
 trace = []
 
 # Use standard library. Enabled by default, disable for no_std.
-use_std = ["serde/std", "ssmarshal/std"]
+use_std = ["serde/std", "ssmarshal/std", "cobs/use_std"]
 
 # Enables unstable features that only work on nightly rust.
 # Required for practical no_std use.
