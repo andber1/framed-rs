@@ -201,6 +201,10 @@ impl Codec {
             }
             let cobs_len = cobs_enc.finalize()
                                    .map_err(|_| Error::CobsEncodeFailed)?;
+            // make sure sentinel is not in output buffer
+            for x in &mut dest[..cobs_len] {
+                *x ^= FRAME_END_SYMBOL;
+            }
             cobs_len
         };
         dest[cobs_len] = FRAME_END_SYMBOL;
@@ -288,7 +292,7 @@ impl Codec {
             if cobs_payload.len() == 0 {
                 0
             } else {
-                cobs::decode(cobs_payload, dest)
+                cobs::decode_with_sentinel(cobs_payload, dest, FRAME_END_SYMBOL)
                     .map_err(|_| Error::CobsDecodeFailed)?
             };
         let cobs_decoded = &dest[0..cobs_decoded_len];
